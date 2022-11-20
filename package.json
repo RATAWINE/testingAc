@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node":"v16.17.0",
+    "npm":"8.15.0"
+  },
   "scripts": {
-    "npm": "start"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
