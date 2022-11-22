@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node":"v16.17.0"
+    "node": "v16.17.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   },
   "homepage": "https://github.com/RATAWINE/testing-render#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mocha": "^10.1.0",
+    "supertest": "^6.3.1"
   }
 }
