@@ -1,38 +1,41 @@
 version: 2.1
+orbs:
+  node: circleci/node@5.0.2
+  heroku: circleci/heroku@1.2.6
+
 jobs:
-  run_tests:
-    docker:
-      - image: circleci/node:16.17.0
+  build_and_test:
+    executor: node/default
     steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: npm
       - run:
-          name: Install npm dependencies
-          command: |
-            npm install --save
+          command: npm run test
+          name: Run tests
       - run:
-          name: Run Unit Tests
-          command: |
-            ./node_modules/mocha/bin/mocha test/
+          command: npm build
+          name: Build app
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+  deploy: # this can be any name you choose
+    executor: heroku/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - heroku/deploy-via-git:
+          force: true # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+
 workflows:
-  build_test:
+  test_my_app:
     jobs:
-      - run_tests
-      # - build_docker_image
-      # - gke_create_cluster
-      # - gke_deploy_app:
-      #     requires:
-      #       - run_tests
-      #       - build_docker_image
-      #       - gke_create_cluster
-      # - smoketest_gke_deployment:
-      #     requires:
-      #       - gke_deploy_app
-      # - approve-destroy:
-      #     type: approval
-      #     requires:
-      #       - gke_create_cluster
-      #       - gke_deploy_app
-      #       - smoketest_gke_deployment
-      # - gke_destroy_cluster:
-      #     requires:
-      #       - approve-destroy
+      - build_and_test
+      - deploy:
+          requires:
+            - build_and_test # only deploy if the build_and_test job has completed
+          filters:
+            branches:
+              only: main # only deploy when on main
