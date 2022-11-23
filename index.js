@@ -3,7 +3,8 @@ const express = require("express")
 const app = express()
 
 app.get("/", (req,res)=>{
-    res.sendFile(__dirname +'/index.html', {status: 200})
+    // res.sendFile(__dirname +'/index.html', {status: 200})
+    res.send("<h1>Welcome to Circleci pipeline tool</h1>")
 })
 
 
